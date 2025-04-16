@@ -40,5 +40,5 @@ build/
 pom.xml
 MAS1/
 .idea/
-src/main
-src/test
+**/src/main
+**/src/test
