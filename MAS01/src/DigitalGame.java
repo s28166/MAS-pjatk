@@ -15,7 +15,7 @@ public class DigitalGame implements Serializable {
     //Attributes
     private static List<DigitalGame> extent = new ArrayList<>();
     private String title;
-    private Publisher publisher;
+    private String publisher;
     private String description;
     private Double price;
     private LocalDate releaseDate;
@@ -26,7 +26,7 @@ public class DigitalGame implements Serializable {
         return Period.between(releaseDate, LocalDate.now()).toTotalMonths();
     }
 
-    public DigitalGame(String title, Publisher publisher, String description, Double price, LocalDate releaseDate, String themeTags) {
+    public DigitalGame(String title, String publisher, String description, Double price, LocalDate releaseDate, List<String> themeTags) {
         setTitle(title);
         setPublisher(publisher);
         setDescription(description);
@@ -37,7 +37,7 @@ public class DigitalGame implements Serializable {
         extent.add(this);
     }
 
-    public DigitalGame(String title, Publisher publisher, String description, Double price, LocalDate releaseDate, String themeTags, String publisherNote) {
+    public DigitalGame(String title, String publisher, String description, Double price, LocalDate releaseDate, List<String> themeTags, String publisherNote) {
         this(title, publisher, description, price, releaseDate, themeTags);
         setPublisherNote(publisherNote);
     }
@@ -68,7 +68,7 @@ public class DigitalGame implements Serializable {
         return title;
     }
 
-    public Publisher getPublisher() {
+    public String getPublisher() {
         return publisher;
     }
 
@@ -109,8 +109,8 @@ public class DigitalGame implements Serializable {
         this.title = title;
     }
 
-    public void setPublisher(Publisher publisher) {
-        if (publisher == null) {
+    public void setPublisher(String publisher) {
+        if (publisher == null || publisher.isBlank()) {
             throw new IllegalArgumentException("[ERROR] Publisher cannot be null or empty");
         }
 
@@ -143,12 +143,15 @@ public class DigitalGame implements Serializable {
         this.releaseDate = releaseDate;
     }
 
-    private void setThemeTags(String themeTags) {
-        if (themeTags == null || themeTags.isBlank()) {
+    private void setThemeTags(List<String> themeTags) {
+        if (themeTags == null || themeTags.isEmpty()) {
             throw new IllegalArgumentException("[ERROR] Theme tags cannot be null or empty");
         }
 
-        for (String tag : themeTags.split(",")) {
+        for (String tag : themeTags) {
+            if (tag == null || tag.isBlank()) {
+                throw new IllegalArgumentException("[ERROR] Theme tag cannot be null or empty");
+            }
             this.themeTags.add(tag.trim());
         }
     }
@@ -201,7 +204,7 @@ public class DigitalGame implements Serializable {
     @Override
     public String toString() {
         return "Title: " + getTitle() +
-                "\nPublisher:\n" + getPublisher() +
+                "\nPublisher: " + getPublisher() +
                 "\nDescription: " + getDescription() +
                 "\nPrice: " + String.format("%.2f", getPrice()) + " " + defaultCurrency +
                 "\nRelease Date: " + getReleaseDate() +

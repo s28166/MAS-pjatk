@@ -1,10 +1,11 @@
-import org.example.DigitalGame;
-import org.example.Publisher;
+package org.example;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 public class DigitalGameTest {
@@ -12,35 +13,37 @@ public class DigitalGameTest {
 
     @Test
     void testConstructor() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("", new Publisher("123", "123"), "", 0d, LocalDate.now(), ""));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("", "", "", 0d, LocalDate.now(), Arrays.asList("")));
         assertEquals("[ERROR] Title cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("", new Publisher("123", "123"), "123", 10d, LocalDate.now(), "10"));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame(null, "", "123", 10d, LocalDate.now(), Arrays.asList("Tag")));
         assertEquals("[ERROR] Title cannot be null or empty", exception.getMessage());
 
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "", "", 0d, LocalDate.now(), Arrays.asList("")));
+        assertEquals("[ERROR] Publisher cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("", ""), "", 0d, LocalDate.now(), ""));
-        assertEquals("[ERROR] Name cannot be null or empty", exception.getMessage());
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", null, "", 0d, LocalDate.now(), Arrays.asList("")));
+        assertEquals("[ERROR] Publisher cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("123", ""), "", 0d, LocalDate.now(), ""));
-        assertEquals("[ERROR] About cannot be null or empty", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "", 0d, LocalDate.now(), ""));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "", 0d, LocalDate.now(), Arrays.asList("")));
         assertEquals("[ERROR] Description cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "Description", 0d, LocalDate.now(), ""));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 0d, LocalDate.now(), Arrays.asList("")));
         assertEquals("[ERROR] Price cannot be null or less than zero", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "Description", 10d, null, ""));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 10d, null, Arrays.asList("")));
         assertEquals("[ERROR] Date cannot be null", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "Description", 10d, LocalDate.now(), ""));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 10d, LocalDate.now(), Arrays.asList("")));
+        assertEquals("[ERROR] Theme tag cannot be null or empty", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 10d, LocalDate.now(), null));
         assertEquals("[ERROR] Theme tags cannot be null or empty", exception.getMessage());
     }
 
     @BeforeEach
     void setUp() {
-        game = new DigitalGame("Title", new Publisher("Publisher", "About"), "Description", 10d, LocalDate.now(), "Tag1, Tag2");
+        game = new DigitalGame("Title", "Publisher", "Description", 10d, LocalDate.now(), Arrays.asList("Tag1", "Tag2"));
     }
 
     @Test
@@ -50,7 +53,7 @@ public class DigitalGameTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> game.setPrice(-100d));
         assertEquals("[ERROR] Price cannot be null or less than zero", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "Description", -10d, LocalDate.now(), "Tag1, Tag2"));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", -10d, LocalDate.now(), Arrays.asList("Tag1", "Tag2")));
         assertEquals("[ERROR] Price cannot be null or less than zero", exception.getMessage());
     }
 
@@ -61,28 +64,24 @@ public class DigitalGameTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> game.setTitle(""));
         assertEquals("[ERROR] Title cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("", new Publisher("Publisher", "creating indie games!"), "Description", 10d, LocalDate.now(), "Tag1, Tag2"));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("", "Publisher", "Description", 10d, LocalDate.now(), Arrays.asList("Tag1", "Tag2")));
         assertEquals("[ERROR] Title cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame(null, new Publisher("Publisher", "creating indie games!"), "Description", 10d, LocalDate.now(), "Tag1, Tag2"));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame(null, "Publisher", "Description", 10d, LocalDate.now(), Arrays.asList("Tag1", "Tag2")));
         assertEquals("[ERROR] Title cannot be null or empty", exception.getMessage());
     }
 
     @Test
     void testPublisher(){
-        assertEquals("\tName: Publisher" +
-                "\n\tAbout: About", game.getPublisher().toString());
+        assertEquals("Publisher", game.getPublisher());
 
 //         exception = assertThrows(IllegalArgumentException.class, () -> game.setPublisher(""));
 //        assertEquals("[ERROR] Publisher cannot be null or empty", exception.getMessage());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("", ""), "Description", 10d, LocalDate.now(), "Tag1, Tag2"));
-        assertEquals("[ERROR] Name cannot be null or empty", exception.getMessage());
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "", "Description", 10d, LocalDate.now(), Arrays.asList("Tag1", "Tag2")));
+        assertEquals("[ERROR] Publisher cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("123", ""), "Description", 10d, LocalDate.now(), "Tag1, Tag2"));
-        assertEquals("[ERROR] About cannot be null or empty", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", null, "Description", 10d, LocalDate.now(), "Tag1, Tag2"));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", null, "Description", 10d, LocalDate.now(), Arrays.asList("Tag1", "Tag2")));
         assertEquals("[ERROR] Publisher cannot be null or empty", exception.getMessage());
     }
 
@@ -93,7 +92,7 @@ public class DigitalGameTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> game.setDescription(""));
         assertEquals("[ERROR] Description cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "   ", 10d, LocalDate.now(), "Tag1, Tag2"));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "   ", 10d, LocalDate.now(), Arrays.asList("Tag1", "Tag2")));
         assertEquals("[ERROR] Description cannot be null or empty", exception.getMessage());
     }
 
@@ -104,7 +103,7 @@ public class DigitalGameTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> game.setReleaseDate(null));
         assertEquals("[ERROR] Date cannot be null", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "Description", 10d, null, "Tag1, Tag2"));
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 10d, null, Arrays.asList("Tag1", "Tag2")));
         assertEquals("[ERROR] Date cannot be null", exception.getMessage());
     }
 
@@ -112,11 +111,17 @@ public class DigitalGameTest {
     void testThemeTags(){
         assertEquals(List.of("Tag1", "Tag2"), game.getThemeTags());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "Description", 10d, LocalDate.now(), "   "));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 10d, LocalDate.now(), Arrays.asList("   ")));
+        assertEquals("[ERROR] Theme tag cannot be null or empty", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 10d, LocalDate.now(), null));
         assertEquals("[ERROR] Theme tags cannot be null or empty", exception.getMessage());
 
-        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", new Publisher("Publisher", "creating indie games!"), "Description", 10d, LocalDate.now(), null));
-        assertEquals("[ERROR] Theme tags cannot be null or empty", exception.getMessage());
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 10d, LocalDate.now(), Arrays.asList("Tag", null)));
+        assertEquals("[ERROR] Theme tag cannot be null or empty", exception.getMessage());
+
+        exception = assertThrows(IllegalArgumentException.class, () -> new DigitalGame("Title", "Publisher", "Description", 10d, LocalDate.now(), Arrays.asList((String) null)));
+        assertEquals("[ERROR] Theme tag cannot be null or empty", exception.getMessage());
     }
 
     @Test
@@ -171,9 +176,7 @@ public class DigitalGameTest {
     void testToString(){
         String expected =
                 "Title: Title"+
-                "\nPublisher:\n" +
-                        "\tName: Publisher" +
-                        "\n\tAbout: About" +
+                "\nPublisher: Publisher" +
                 "\nDescription: Description" +
                 "\nPrice: 10,00 EUR" +
                 "\nRelease Date: " + LocalDate.now() +

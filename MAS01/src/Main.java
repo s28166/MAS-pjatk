@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -53,14 +54,10 @@ public class Main {
         }
     }
     private static void createGame(){
-        Publisher p1 = new Publisher("CD Project Red", "Big Polish studio");
-        Publisher p2 = new Publisher("TVGS", "One person, that's creating indie games");
-        Publisher p3 = new Publisher("Electronic Arts", "Massive American game creator");
-
         try {
-            new DigitalGame("The Witcher 3", p1, "Game about some witcher dudes", 40d, LocalDate.of(2015, 5, 13), "Action, Adventure, Magic");
-            new DigitalGame("Schedule I", p2, "Sell drugs and become the biggest kingpin ever", 29.99, LocalDate.of(2025, 3, 31), "Action, Adventure, Simulator", "Early Access");
-            new DigitalGame("Need for Speed Heat", p3, "Break rules, while driving awesome cars", 50.99, LocalDate.of(2019, 10, 8), "Simulator, Racing, Action");
+            new DigitalGame("The Witcher 3", "CD Project Red", "Game about some witcher dudes", 40d, LocalDate.of(2015, 5, 13), Arrays.asList("Action", "Adventure", "Magic"));
+            new DigitalGame("Schedule I", "TVGS", "Sell drugs and become the biggest kingpin ever", 29.99, LocalDate.of(2025, 3, 31), Arrays.asList("Action", "Adventure", "Simulator"), "Early Access");
+            new DigitalGame("Need for Speed Heat", "Electronic Arts", "Break rules, while driving awesome cars", 50.99, LocalDate.of(2019, 10, 8), Arrays.asList("Simulator", "Racing" ,"Action"));
 
             System.out.println("== Games successfully created ==");
         } catch (IllegalArgumentException e) {
@@ -96,7 +93,7 @@ public class Main {
 
             System.out.println("== Tags successfully removed ==");
         } catch (IllegalArgumentException e) {
-            System.out.println("[ERROR] " + e.getMessage());
+            System.out.println(e.getMessage());
         }
 
     }
@@ -109,7 +106,7 @@ public class Main {
 
             System.out.println("== Tags successfully added ==");
         } catch (IllegalArgumentException e) {
-            System.out.println("[ERROR] " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 }
